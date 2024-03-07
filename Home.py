@@ -22,7 +22,6 @@ def run():
     st.set_page_config(
         page_title="Applied Cryptography Project",
         page_icon="🔑",
-        layout="wide",
     )
 
     col1, col2, col3, col4, col5 = st.columns(5)
