@@ -117,8 +117,85 @@ def Caesar_Cipher():
 
           except:
               st.error("Shift Keys should be an integer!")
-          
-          
+
+def Primitive_Root():      
+    st.header('Primitive Root', divider='rainbow') 
+    
+    def prime_check(q):
+        int_q = int(q)   
+        
+        if int_q <= 1:
+            return False
+        for i in range(2, int(int_q**0.5)+1):
+            if (int_q % i) == 0:
+                return False
+        return True
+
+    def power_mod(base, exp, mod):
+        res = 1 
+        base %= mod
+        while exp > 0:
+            if exp % 2 == 1:
+                res = (res * base) % mod
+            exp //= 2
+            base = (base * base) % mod
+        return res
+        
+    def find_primitive_roots(q):
+        int_q = int(q)  
+        primitive_roots = []
+        for g in range(1, int_q):
+            is_primitive = True
+            powers = set()
+            for i in range(1, int_q):
+                power = power_mod(g, i, int_q)
+                powers.add(power)
+                if power == 1:
+                    break
+            if len(powers) == int_q - 1:
+                primitive_roots.append(g)
+        return primitive_roots
+            
+    def print_primitive(p, q):
+         
+
+        if st.button("Submit", key="clk_btn2"):
+            int_q = int(q)  
+            int_p = int(p) 
+            if not prime_check(int_p):
+                st.write(f"{int_p} is not a prime number!!")
+                return
+            
+            print_res = []
+            for g in range(1, int_p):
+                output = []
+                for j in range(1, int_p):
+                    result = power_mod(g, j, int_p)
+                    output.append(f"{g}^{j} mod {int_p} = {result}")
+                    if result == 1:
+                        break
+                if g in find_primitive_roots(int_p):
+                    output[-1] += f" ==> {g} is primitive root of {int_p}|"
+                else:
+                    output[-1] += "|"
+                print_res.append("|".join(output))
+            st.write("\n".join(print_res))
+            primitive_root = find_primitive_roots(int_p)
+            if primitive_root:
+                if int_q in primitive_root:
+                    st.write(f"{int_q} is primitive root: True {primitive_root}")
+                else:
+                    st.write(f"{int_q} is NOT primitive root of {int_p} - List of Primitive roots: {primitive_root}")
+            else:
+                st.write(f"{int_q} is NOT primitive root of {int_p} - List of Primitive roots: {primitive_root}")
+        
+        
+    q = st.text_input("Q")
+    g = st.text_input("G")
+    
+    print_primitive(q, g)
+
+         
 
           
 
@@ -136,7 +213,7 @@ if __name__ == "__main__":
       Caesar_Cipher()
 
     with tab4:
-      st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
+      Primitive_Root()
     
     with tab5:
       st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
