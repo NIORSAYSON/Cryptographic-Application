@@ -39,9 +39,16 @@ def XOR_Cipher():
       key = bytes(st.text_input('Key').encode())
       if st.button("Submit", key="clk_btn"):
           col1, col2 = st.columns(2)
-          if len(plaintext) >= len(key):
+          if not plaintext.strip() and not key.strip():
+              st.error("Please input a plaintext and key.")
+          elif not plaintext.strip():
+              st.error("Please input a plaintext.")
+          elif not key.strip():
+              st.error("Please input a key.")
+          elif len(plaintext) >= len(key):
               if plaintext != key:
                   try:
+          
                       with col1:
                           cipher = xor_encrypt(plaintext, key)
                           st.write(f"Ciphertext:", "".join([f"{chr(byte_val)}" for byte_val in cipher]))
@@ -49,11 +56,12 @@ def XOR_Cipher():
                           decrypt = xor_decrypt(cipher, key)
                           st.write(f"Decrypted:", "".join([f"{chr(byte_va)}" for byte_va in decrypt]))
                   except:
-                      st.error("Invalid Key!")
+                          st.error("Invalid Key!")
               else:
                   st.error("Plaintext should not be equal to the key")
           else:
               st.error("Plaintext length should be equal or greater than the length of key")  
+      
 
 def Caesar_Cipher():
     st.header('Caesar Cipher', divider='rainbow')
@@ -96,18 +104,19 @@ def Caesar_Cipher():
               elif not all(isinstance(key, int) for key in shift_keys):
                   st.error("Please enter an integer in shift keys")
               else:
-                  col1, col2 = st.columns(2)
-                  with col1:
-                      encrypted_text = encrypt_decrypt(text, shift_keys, ifdecrypt=False)
-                  with col2:
-                      decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
-                  
                   st.write("Text:", text)
                   st.write("Shift keys:", ' '.join(map(str, shift_keys)))
-                  st.write("Cipher:", encrypted_text)
-                  st.write("Decrypted text:", decrypted_text)
+                  col1, col2 = st.columns(2)
+                  
+                  with col1:
+                      encrypted_text = encrypt_decrypt(text, shift_keys, ifdecrypt=False)
+                      st.write("Cipher:", encrypted_text)
+                  with col2:
+                      decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
+                      st.write("Decrypted text:", decrypted_text)
+
           except:
-              st.error("Invalid!")
+              st.error("Shift Keys should be an integer!")
           
           
 
