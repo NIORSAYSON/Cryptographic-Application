@@ -158,43 +158,44 @@ def Primitive_Root():
             
     def print_primitive(p, q):
         if st.button("Submit", key="clk_btn2"):
-            
-            if not p.strip() and not q.strip():
-                st.error("Please input a Value of Prime number p and Value of Prime number q.")
-            elif not p.strip():
-                st.error("Please input a Value of Prime number p.")
-            elif not q.strip():
-                st.error("Please input a Value of Prime number q.")
-            else:
-                int_q = int(q)  
-                int_p = int(p)
-                if not prime_check(int_p):
-                    st.write(f"{int_p} is not a prime number!!")
-                    return
-                
-                print_res = []
-                for g in range(1, int_p):
-                    output = []
-                    for j in range(1, int_p):
-                        result = power_mod(g, j, int_p)
-                        output.append(f"{g}^{j} mod {int_p} = {result}")
-                        if result == 1:
-                            break
-                    if g in find_primitive_roots(int_p):
-                        output[-1] += f" ==> {g} is primitive root of {int_p}|"
-                    else:
-                        output[-1] += "|\n"
-                    print_res.append("|".join(output))
-                st.write("\n".join(print_res))
-                primitive_root = find_primitive_roots(int_p)
-                if primitive_root:
-                    if int_q in primitive_root:
-                        st.write(f"{int_q} is primitive root: True {primitive_root}")
+            try:
+                if not p.strip() and not q.strip():
+                    st.error("Please input a Value of Prime number p and Value of Prime number q.")
+                elif not p.strip():
+                    st.error("Please input a Value of Prime number p.")
+                elif not q.strip():
+                    st.error("Please input a Value of Prime number q.")
+                else:
+                    int_q = int(q)  
+                    int_p = int(p)
+                    if not prime_check(int_p):
+                        st.write(f"{int_p} is not a prime number!!")
+                        return
+                    
+                    print_res = []
+                    for g in range(1, int_p):
+                        output = []
+                        for j in range(1, int_p):
+                            result = power_mod(g, j, int_p)
+                            output.append(f"{g}^{j} mod {int_p} = {result}")
+                            if result == 1:
+                                break
+                        if g in find_primitive_roots(int_p):
+                            output[-1] += f" ==> {g} is primitive root of {int_p}|"
+                        else:
+                            output[-1] += "|\n"
+                        print_res.append("|".join(output))
+                    st.write("\n".join(print_res))
+                    primitive_root = find_primitive_roots(int_p)
+                    if primitive_root:
+                        if int_q in primitive_root:
+                            st.write(f"{int_q} is primitive root: True {primitive_root}")
+                        else:
+                            st.write(f"{int_q} is NOT primitive root of {int_p} - List of Primitive roots: {primitive_root}")
                     else:
                         st.write(f"{int_q} is NOT primitive root of {int_p} - List of Primitive roots: {primitive_root}")
-                else:
-                    st.write(f"{int_q} is NOT primitive root of {int_p} - List of Primitive roots: {primitive_root}")
-        
+            except:
+                st.error("Inputs should be an integer!")
         
     q = st.text_input("Value of Prime number p")
     g = st.text_input("Value of Prime number q")
