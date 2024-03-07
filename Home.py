@@ -20,15 +20,9 @@ LOGGER = get_logger(__name__)
 
 def run():
     st.set_page_config(
-        page_title="Ex-stream-ly Cool App",
-        page_icon="🧊",
+        page_title="Applied Cryptography Project",
+        page_icon="🔑",
         layout="wide",
-        initial_sidebar_state="expanded",
-        menu_items={
-            'Get Help': 'https://www.extremelycoolapp.com/help',
-            'Report a bug': "https://www.extremelycoolapp.com/bug",
-            'About': "# This is a header. This is an *extremely* cool app!"
-        }
     )
 
     st.write("# Welcome to Streamlit! 👋")
