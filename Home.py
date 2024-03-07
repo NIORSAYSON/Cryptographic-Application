@@ -3,20 +3,17 @@ from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
+st.set_page_config(
+    page_title="Applied Cryptography Project",
+    page_icon="🔑",
+)
 
-def run():
-    st.set_page_config(
-        page_title="Applied Cryptography Project",
-        page_icon="🔑",
-    )
+  
+def XOR_Cipher():
+    
 
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Primitive Root", "Block Cipher"])
-
-    with tab1:
-      st.page_link("Home.py", label="Home")
-
-    with tab2:
+    
       st.header('XOR Cipher', divider='rainbow')
 
       def xor_encrypt(plaintext, key):
@@ -52,10 +49,10 @@ def run():
                   try:
                       with col1:
                           cipher = xor_encrypt(plaintext, key)
-                          st.write(f"##Ciphertext:", "".join([f"{chr(byte_val)}" for byte_val in cipher]))
+                          st.write(f"Ciphertext:", "".join([f"{chr(byte_val)}" for byte_val in cipher]))
                       with col2:
                           decrypt = xor_decrypt(cipher, key)
-                          st.write(f"##SDecrypted:", "".join([f"{chr(byte_va)}" for byte_va in decrypt]))
+                          st.write(f"Decrypted:", "".join([f"{chr(byte_va)}" for byte_va in decrypt]))
                   except:
                       st.error("Invalid Key!")
               else:
@@ -63,14 +60,23 @@ def run():
           else:
               st.write("Plaintext length should be equal or greater than the length of key")
 
+if __name__ == "__main__":
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Primitive Root", "Block Cipher"])
+
+    with tab1:
+      st.page_link("Home.py", label="Home")
+
+    with tab2:
+      XOR_Cipher()
+    
     with tab3:
-      st.page_link("pages/1_Caesar_Cipher.py")
+      st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
 
     with tab4:
-      st.page_link("pages/2_Primitive_Root.py")
+      st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
     
     with tab5:
-      st.page_link("pages/3_Block_Cipher.py")
+      st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
       
     # col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -90,6 +96,3 @@ def run():
     #   st.page_link("pages/3_Block_Cipher.py", label="Block Cipher", icon="2️⃣")
     # st.page_link("pages/page_2.py", label="Page 2", icon="2️⃣", disabled=True)
     # st.page_link("http://www.google.com", label="Google", icon="🌎")
-
-if __name__ == "__main__":
-    run()
