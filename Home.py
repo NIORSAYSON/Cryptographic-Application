@@ -55,6 +55,65 @@ def XOR_Cipher():
           else:
               st.error("Plaintext length should be equal or greater than the length of key")  
 
+def Caesar_Cipher():
+    st.header('Caesar Cipher', divider='rainbow')
+    def encrypt_decrypt(text, shift_keys, ifdecrypt):
+        """
+        Encrypts a text using Caesar Cipher with a list of shift keys.
+        Args:
+            text: The text to encrypt.
+            shift_keys: A list of integers representing the shift values for each character.
+            ifdecrypt: flag if decrypt or encrypt
+        Returns:
+            A string containing the encrypted text if encrypt and plain text if decrypt
+        """
+        res = ""
+        for i, character in enumerate(text):
+            shift_index = shift_keys[i % len(shift_keys)]
+            if ifdecrypt:
+                res += chr((ord(character) - shift_index - 32) % 94 + 32)
+            else:
+                res += chr((ord(character) + shift_index - 32 + 94) % 94 + 32)
+            st.write(i, character, shift_index, res[i])
+            
+        st.write("-" * 10)
+            
+        return res
+        
+    # Example usage
+    text = st.text_input("Text")
+    shift_keys_input = st.text_input("Shift Keys")
+    if st.button("Submit", key="clk_btn1"):
+          
+          try:
+              shift_keys = list(map(int, shift_keys_input.split()))
+              if not text.strip() and not shift_keys_input.strip():
+                  st.error("Please input a text and shift keys.")
+              elif not text.strip():
+                  st.error("Please input a text.")
+              elif not shift_keys_input.strip():
+                  st.error("Please input a shift keys.")
+              elif not all(isinstance(key, int) for key in shift_keys):
+                  st.error("Please enter an integer in shift keys")
+              else:
+                  col1, col2 = st.columns(2)
+                  with col1:
+                      encrypted_text = encrypt_decrypt(text, shift_keys, ifdecrypt=False)
+                  with col2:
+                      decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
+                  
+                  st.write("Text:", text)
+                  st.write("Shift keys:", ' '.join(map(str, shift_keys)))
+                  st.write("Cipher:", encrypted_text)
+                  st.write("Decrypted text:", decrypted_text)
+          except:
+              st.error("Invalid!")
+          
+          
+
+          
+
+
 if __name__ == "__main__":
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Primitive Root", "Block Cipher"])
 
@@ -65,7 +124,7 @@ if __name__ == "__main__":
       XOR_Cipher()
     
     with tab3:
-      st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
+      Caesar_Cipher()
 
     with tab4:
       st.image("https://static.streamlit.io/examples/cat.jpg", width=200)
