@@ -10,10 +10,6 @@ st.set_page_config(
 
   
 def XOR_Cipher():
-    
-
-
-    
       st.header('XOR Cipher', divider='rainbow')
 
       def xor_encrypt(plaintext, key):
@@ -41,7 +37,6 @@ def XOR_Cipher():
       # Example usage:
       plaintext = bytes(st.text_input('Plaintext').encode())
       key = bytes(st.text_input('Key').encode())
-
       if st.button("Submit", key="clk_btn"):
           col1, col2 = st.columns(2)
           if len(plaintext) >= len(key):
@@ -56,9 +51,9 @@ def XOR_Cipher():
                   except:
                       st.error("Invalid Key!")
               else:
-                  st.write("Plaintext should not be equal to the key")
+                  st.error("Plaintext should not be equal to the key")
           else:
-              st.write("Plaintext length should be equal or greater than the length of key")
+              st.error("Plaintext length should be equal or greater than the length of key")  
 
 if __name__ == "__main__":
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Primitive Root", "Block Cipher"])
