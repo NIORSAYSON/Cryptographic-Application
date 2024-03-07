@@ -20,6 +20,7 @@ import streamlit as st
 from streamlit.hello.utils import show_code
 
 
+
 def animation_demo() -> None:
 
     # Interactive Streamlit elements, like these sliders, return their value.
@@ -71,6 +72,22 @@ def animation_demo() -> None:
 
 
 st.set_page_config(page_title="Animation Demo", page_icon="📹")
+col1, col2, col3, col4, col5 = st.columns(5)
+
+with col1:
+    st.page_link("Home.py", label="Home", icon="🏠")
+
+with col2:
+    st.page_link("pages/0_XOR_Cipher.py", label="XOR Cipher", icon="1️⃣")
+    
+with col3:
+    st.page_link("pages/1_Caesar_Cipher.py", label="Caesar Cipher", icon="2️⃣")
+
+with col4:
+    st.page_link("pages/2_Primitive_Root.py", label="Primitive Root", icon="2️⃣")
+
+with col5:
+    st.page_link("pages/3_Block_Cipher.py", label="Block Cipher", icon="2️⃣")
 st.markdown("# Animation Demo")
 st.sidebar.header("Animation Demo")
 st.write(
