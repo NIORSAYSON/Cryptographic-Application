@@ -1,43 +1,82 @@
 import streamlit as st
-import rsa
 
-def generate_keys():
-    # Generate public and private keys
-    (public_key, private_key) = rsa.newkeys(512)  # Adjust key size according to your requirements
-    return public_key, private_key
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
 
-def encrypt(message, public_key):
-    # Encrypt the message using the public key
-    encrypted_message = rsa.encrypt(message.encode(), public_key)
-    return encrypted_message
+def multiplicative_inverse(e, t):
+    d = 0
+    x1, x2 = 0, 1
+    y1, y2 = 1, 0
+    temp_t = t
+    
+    while e > 0:
+        temp1 = temp_t // e
+        temp2 = temp_t - temp1 * e
+        temp_t = e
+        e = temp2
+        
+        x = x2 - temp1 * x1
+        y = y2 - temp1 * y1
+        
+        x2 = x1
+        x1 = x
+        y2 = y1
+        y1 = y
+    
+    if temp_t == 1:
+        d = y2 + t
+    return d
 
-def decrypt(encrypted_message, private_key):
-    # Decrypt the encrypted message using the private key
-    decrypted_message = rsa.decrypt(encrypted_message, private_key)
-    return decrypted_message.decode()
+def generate_keypair(p, q):
+    n = p * q
+    t = (p - 1) * (q - 1)
+    
+    # Choose e such that e and t are coprime
+    e = 2
+    while gcd(e, t) != 1:
+        e += 1
+    
+    # Calculate d, the multiplicative inverse of e modulo t
+    d = multiplicative_inverse(e, t)
+    
+    return ((e, n), (d, n))
 
-def asymmetric_key_cryptography():
-    # Generate keys
-    public_key, private_key = generate_keys()
+def encrypt(public_key, plaintext):
+    e, n = public_key
+    cipher = [pow(ord(char), e, n) for char in plaintext]
+    return cipher
 
-    # Example usage
-    message = st.text_input("Enter a message to encrypt")
+def decrypt(private_key, ciphertext):
+    d, n = private_key
+    plain = [chr(pow(char, d, n)) for char in ciphertext]
+    return ''.join(plain)
 
+def main():
+    st.title("Asymmetric Key Cryptography (RSA)")
+    st.sidebar.header("RSA Encryption & Decryption")
+    
+    p = int(st.sidebar.text_input("Value of Prime number p", 43))
+    q = int(st.sidebar.text_input("Value of Prime number q", 41))
+    message = st.sidebar.text_input("Message", "Hello, World!")
+    
+    if st.sidebar.button("Generate New Key Pairs"):
+        public_key, private_key = generate_keypair(p, q)
+        st.sidebar.write("Public Key: e =", public_key[0], "| n =", public_key[1])
+        st.sidebar.write("Private Key: d =", private_key[0], "| n =", private_key[1])
+    
+    st.header("Encryption")
+    st.write("Public key:", public_key[0], "| n =", public_key[1])
     if st.button("Encrypt"):
-        # Encrypt the message using the public key
-        encrypted_message = encrypt(message, public_key)
-        st.write("Encrypted message:", encrypted_message.hex())
-
-    encrypted_input = st.text_input("Enter encrypted message")
-
+        encrypted_message = encrypt(public_key, message)
+        st.write("Encrypted Message:", encrypted_message)
+    
+    st.header("Decryption")
+    st.write("Private key:", private_key[0], "| n =", private_key[1])
     if st.button("Decrypt"):
-        # Decrypt the encrypted message using the private key
-        try:
-            decrypted_message = decrypt(bytes.fromhex(encrypted_input), private_key)
-            st.write("Decrypted message:", decrypted_message)
-        except:
-            st.error("Invalid encrypted message")
+        decrypted_message = decrypt(private_key, encrypted_message)
+        st.write("Decrypted Message:", decrypted_message)
 
 if __name__ == "__main__":
-    st.title("Asymmetric Key Cryptography")
-    asymmetric_key_cryptography()
+    main()
