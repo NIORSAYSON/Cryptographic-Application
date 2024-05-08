@@ -353,7 +353,7 @@ def Block_Cipher():
 
 
 if __name__ == "__main__":
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Primitive Root", "Block Cipher"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
 
     with tab1:
         home()
