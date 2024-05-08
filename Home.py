@@ -1,4 +1,12 @@
 import streamlit as st
+from streamlit.logger import get_logger
+
+LOGGER = get_logger(__name__)
+
+st.set_page_config(
+    page_title="Applied Cryptography Project",
+    page_icon="🔑",
+)
 
 st.markdown("<h1 style='text-align: center;'>Applied Cryptography</h1>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center;'>Compilation of Learning Tasks</h2>", unsafe_allow_html=True)
