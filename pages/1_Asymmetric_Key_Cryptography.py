@@ -1,77 +1,58 @@
 import streamlit as st
-import random
 
 def gcd(a, b):
     while b != 0:
         a, b = b, a % b
     return a
 
-def multiplicative_inverse(e, t):
-    d = 0
-    x1, x2 = 0, 1
-    y1, y2 = 1, 0
-    temp_t = t
-    
-    while e > 0:
-        temp1 = temp_t // e
-        temp2 = temp_t - temp1 * e
-        temp_t = e
-        e = temp2
-        
-        x = x2 - temp1 * x1
-        y = y2 - temp1 * y1
-        
-        x2 = x1
-        x1 = x
-        y2 = y1
-        y1 = y
-    
-    if temp_t == 1:
-        d = y2 + t
-    return d
+def mod_inverse(a, m):
+    m0, x0, x1 = m, 0, 1
+    while a > 1:
+        q = a // m
+        m, a = a % m, m
+        x0, x1 = x1 - q * x0, x0
+    return x1 + m0 if x1 < 0 else x1
 
-def generate_keypair(p, q):
-    n = p * q
-    t = (p - 1) * (q - 1)
-    
-    possible_e_values = [i for i in range(2, t) if gcd(i, t) == 1]
-    e = random.choice(possible_e_values)
-    
-    d = multiplicative_inverse(e, t)
-    
-    return ((e, n), (d, n))
-
-def encrypt(public_key, plaintext):
-    e, n = public_key
-    cipher = [pow(ord(char), e, n) for char in plaintext]
+def encrypt(message, e, n):
+    cipher = [pow(ord(char), e, n) for char in message]
     return cipher
 
-def decrypt(private_key, ciphertext):
-    d, n = private_key
-    plain = [chr(pow(char, d, n)) for char in ciphertext]
-    return ''.join(plain)
+def decrypt(cipher, d, n):
+    message = ''.join([chr(pow(char, d, n)) for char in cipher])
+    return message
 
 def main():
-    st.title("Asymmetric Key Cryptography (RSA)")
-    
-    p = int(st.text_input("Value of Prime number p:", 43))
-    q = int(st.text_input("Value of Prime number q:", 41))
-    
-    if st.button("Generate New Key Pairs"):
-        public_key, private_key = generate_keypair(p, q)
-        st.sidebar.write("Public Key: e =", public_key[0], "| n =", public_key[1])
-        st.sidebar.write("Private Key: d =", private_key[0], "| n =", private_key[1])
-    
-    message = st.text_area("Message:", "Hello Bob! How are you?")
-    
+    st.title("RSA Encryption and Decryption")
+    st.write("Enter your message below:")
+
+    message = st.text_area("Message")
+
+    p = 43
+    q = 41
+    n = p * q
+    t = (p - 1) * (q - 1)
+
+    e = 1129
+    d = mod_inverse(e, t)
+
     if st.button("Encrypt"):
-        encrypted_message = encrypt(public_key, message)
-        st.write("Cipher text:", encrypted_message)
-        st.write("Cipher text:", ''.join([chr(char) for char in encrypted_message]))
-    
+        if message:
+            encrypted_message = encrypt(message, e, n)
+            st.write("Encrypted Message:", encrypted_message)
+        else:
+            st.error("Please enter a message to encrypt.")
+
     if st.button("Decrypt"):
-        decrypted_message = decrypt(private_key, encrypted_message)
-        st.write("Plain text:", decrypted_message)
+        cipher_text = st.text_area("Cipher Text")
+        if cipher_text:
+            try:
+                cipher = [int(char) for char in cipher_text.split(',')]
+                decrypted_message = decrypt(cipher, d, n)
+                st.write("Decrypted Message:", decrypted_message)
+            except ValueError:
+                st.error("Invalid cipher text format. Please enter comma-separated integers.")
+        else:
+            st.error("Please enter the cipher text to decrypt.")
 
 if __name__ == "__main__":
     main()
