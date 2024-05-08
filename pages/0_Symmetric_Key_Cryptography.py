@@ -4,7 +4,7 @@ from streamlit.logger import get_logger
 LOGGER = get_logger(__name__)
 
 st.set_page_config(
-    page_title="Applied Cryptography Project",
+    page_title="Symmetric Key Cryptography",
     page_icon="🔑",
 )
 
