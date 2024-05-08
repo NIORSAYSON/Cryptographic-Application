@@ -27,12 +27,13 @@ def main():
 
     message = st.text_area("Message")
 
-    p = 43
-    q = 41
+    p = st.number_input("Enter prime number p")
+    q = st.number_input("Enter prime number q")
+
     n = p * q
     t = (p - 1) * (q - 1)
 
-    e = 1129
+    e = st.number_input("Enter public key e")
     d = mod_inverse(e, t)
 
     if st.button("Encrypt"):
