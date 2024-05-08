@@ -358,8 +358,6 @@ if __name__ == "__main__":
     #     ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
     # )
 
-    st.page_link("Home1.py")
-
     tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
 
     with tab1:
