@@ -23,8 +23,8 @@ def asymmetric_key_cryptography():
     if public_key_input and private_key_input:
         try:
             # Parse user input to extract public and private keys
-            public_key = tuple(map(int, public_key_input.split(',')))
-            private_key = tuple(map(int, private_key_input.split(',')))
+            public_key = tuple(map(int, public_key_input.strip().split(',')))
+            private_key = tuple(map(int, private_key_input.strip().split(',')))
 
             # Example usage
             message = st.text_input("Enter a message to encrypt")
@@ -43,7 +43,7 @@ def asymmetric_key_cryptography():
                     st.write("Decrypted message:", decrypted_message)
                 except:
                     st.error("Invalid encrypted message")
-        except:
+        except ValueError:
             st.error("Invalid key format. Please enter keys in the correct format (n, e) or (n, d)")
 
 if __name__ == "__main__":
