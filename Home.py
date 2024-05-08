@@ -353,10 +353,12 @@ def Block_Cipher():
 
 
 if __name__ == "__main__":
-    add_selectbox = st.sidebar.selectbox(
-        "Types Of Cryptography",
-        ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
-    )
+    # add_selectbox = st.sidebar.selectbox(
+    #     "Types Of Cryptography",
+    #     ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
+    # )
+    with st.sidebar:
+        st.[Symmetric Key Cryptography]
     tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
 
     with tab1:
