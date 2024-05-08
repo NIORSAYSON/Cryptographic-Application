@@ -364,10 +364,10 @@ if __name__ == "__main__":
     with tab3:
         Caesar_Cipher()
 
-    with tab4:
-        Primitive_Root()
+    # with tab4:
+    #     Primitive_Root()
     
-    with tab5:
+    with tab4:
         Block_Cipher()
       
     # col1, col2, col3, col4, col5 = st.columns(5)
