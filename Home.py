@@ -354,8 +354,8 @@ def Block_Cipher():
 
 if __name__ == "__main__":
     add_selectbox = st.sidebar.selectbox(
-        "How would you like to be contacted?",
-        ("Email", "Home phone", "Mobile phone")
+        "Types Of Cryptography",
+        ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
     )
     tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
 
