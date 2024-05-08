@@ -358,21 +358,18 @@ if __name__ == "__main__":
     #     ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
     # )
 
-    tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
+    tab1, tab2, tab3 = st.tabs(["XOR Cipher", "Caesar Cipher", "Block Cipher"])
 
     with tab1:
-        home()
-
-    with tab2:
         XOR_Cipher()
     
-    with tab3:
+    with tab2:
         Caesar_Cipher()
 
     # with tab4:
     #     Primitive_Root()
     
-    with tab4:
+    with tab3:
         Block_Cipher()
       
     # col1, col2, col3, col4, col5 = st.columns(5)
