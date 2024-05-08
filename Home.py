@@ -358,7 +358,7 @@ if __name__ == "__main__":
     #     ("Symmetric Key Cryptography", "Asymmetric Key Cryptography", "Hash Functions")
     # )
 
-    if st.button("Home"):
+    if st.button("Home1"):
         st.switch_page("Home1.py")
 
     tab1, tab2, tab3, tab4 = st.tabs(["Home", "XOR Cipher", "Caesar Cipher", "Block Cipher"])
