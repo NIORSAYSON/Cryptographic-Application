@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 
 def gcd(a, b):
     while b != 0:
@@ -33,12 +34,9 @@ def generate_keypair(p, q):
     n = p * q
     t = (p - 1) * (q - 1)
     
-    # Choose e such that e and t are coprime
-    e = 2
-    while gcd(e, t) != 1:
-        e += 1
+    possible_e_values = [i for i in range(2, t) if gcd(i, t) == 1]
+    e = random.choice(possible_e_values)
     
-    # Calculate d, the multiplicative inverse of e modulo t
     d = multiplicative_inverse(e, t)
     
     return ((e, n), (d, n))
@@ -56,29 +54,21 @@ def decrypt(private_key, ciphertext):
 def main():
     st.title("Asymmetric Key Cryptography (RSA)")
     
-    p = 43
-    q = 41
-    n = p * q
-    t = (p - 1) * (q - 1)
+    p = int(st.text_input("Value of Prime number p:", 43))
+    q = int(st.text_input("Value of Prime number q:", 41))
     
-    public_key, private_key = generate_keypair(p, q)
-    
-    st.header("RSA Encryption")
-    st.write("Public key: e =", public_key[0], "| n =", public_key[1])
-    st.write("Deryption Private key: d =", private_key[0], "| n =", private_key[1])
+    if st.button("Generate New Key Pairs"):
+        public_key, private_key = generate_keypair(p, q)
+        st.sidebar.write("Public Key: e =", public_key[0], "| n =", public_key[1])
+        st.sidebar.write("Private Key: d =", private_key[0], "| n =", private_key[1])
     
     message = st.text_area("Message:", "Hello Bob! How are you?")
-    st.write("message:", [ord(char) for char in message])
     
     if st.button("Encrypt"):
         encrypted_message = encrypt(public_key, message)
         st.write("Cipher text:", encrypted_message)
         st.write("Cipher text:", ''.join([chr(char) for char in encrypted_message]))
     
-    st.header("RSA Decryption")
-    st.write("To Decrypt, use private key", private_key[0], "| n =", private_key[1])
-    st.write("Key:", private_key[0])
-    st.write("n:", private_key[1])
     if st.button("Decrypt"):
         decrypted_message = decrypt(private_key, encrypted_message)
         st.write("Plain text:", decrypted_message)
