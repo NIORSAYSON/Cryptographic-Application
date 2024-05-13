@@ -95,16 +95,17 @@ def XOR_Cipher():
                 st.write("Decrypted Plaintext:", file_content)
 
 def Caesar_Cipher():
-    st.header('Caesar Cipher', divider='rainbow')
+    st.header('Caesar Cipher Encryption and Decryption', divider='rainbow')
+    
     def encrypt_decrypt(text, shift_keys, ifdecrypt):
         """
-        Encrypts a text using Caesar Cipher with a list of shift keys.
+        Encrypts or decrypts a text using Caesar Cipher with a list of shift keys.
         Args:
-            text: The text to encrypt.
+            text: The text to encrypt or decrypt, or the content of the file.
             shift_keys: A list of integers representing the shift values for each character.
-            ifdecrypt: flag if decrypt or encrypt
+            ifdecrypt: Flag indicating whether to decrypt or encrypt.
         Returns:
-            A string containing the encrypted text if encrypt and plain text if decrypt
+            A string containing the encrypted text if encrypting, or plain text if decrypting.
         """
         res = ""
         for i, character in enumerate(text):
@@ -118,36 +119,66 @@ def Caesar_Cipher():
         st.write("-" * 10)
             
         return res
-        
-    # Example usage
-    text = st.text_input("Text")
-    shift_keys_input = st.text_input("Shift Keys")
-    if st.button("Submit", key="clk_btn1"):
-          
-          try:
-              shift_keys = list(map(int, shift_keys_input.split()))
-              if not text.strip() and not shift_keys_input.strip():
-                  st.error("Please input a text and shift keys.")
-              elif not text.strip():
-                  st.error("Please input a text.")
-              elif not shift_keys_input.strip():
-                  st.error("Please input a shift keys.")
-              elif not all(isinstance(key, int) for key in shift_keys):
-                  st.error("Please enter an integer in shift keys")
-              else:
-                  st.write("Text:", text)
-                  st.write("Shift keys:", ' '.join(map(str, shift_keys)))
-                  col1, col2 = st.columns(2)
-                  
-                  with col1:
-                      encrypted_text = encrypt_decrypt(text, shift_keys, ifdecrypt=False)
-                      st.write("Cipher:", encrypted_text)
-                  with col2:
-                      decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
-                      st.write("Decrypted text:", decrypted_text)
 
-          except:
-              st.error("Shift Keys should be an integer!")
+
+    option = st.radio("Select Input Type:", ("Text", "File"))
+
+    if option == "Text":
+        text = st.text_input("Text")
+        shift_keys_input = st.text_input("Shift Keys")
+        if st.button("Submit", key="clk_btn1"):
+            try:
+                shift_keys = list(map(int, shift_keys_input.split()))
+                if not text.strip() and not shift_keys_input.strip():
+                    st.error("Please input a text and shift keys.")
+                elif not text.strip():
+                    st.error("Please input a text.")
+                elif not shift_keys_input.strip():
+                    st.error("Please input shift keys.")
+                elif not all(isinstance(key, int) for key in shift_keys):
+                    st.error("Please enter an integer in shift keys.")
+                else:
+                    st.write("Text:", text)
+                    st.write("Shift keys:", ' '.join(map(str, shift_keys)))
+                    col1, col2 = st.columns(2)
+
+                    with col1:
+                        encrypted_text = encrypt_decrypt(text, shift_keys, ifdecrypt=False)
+                        st.write("Cipher:", encrypted_text)
+                    with col2:
+                        decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
+                        st.write("Decrypted text:", decrypted_text)
+
+            except:
+                st.error("Shift keys should be integers!")
+
+    else:
+        # File upload
+        uploaded_file = st.file_uploader("Upload plaintext file", type=["txt"])
+        if uploaded_file:
+            file_content = uploaded_file.read().decode()
+            shift_keys_input = st.text_input("Shift Keys")
+            if st.button("Submit", key="clk_btn2"):
+                try:
+                    shift_keys = list(map(int, shift_keys_input.split()))
+                    if not shift_keys_input.strip():
+                        st.error("Please input shift keys.")
+                    elif not all(isinstance(key, int) for key in shift_keys):
+                        st.error("Please enter an integer in shift keys.")
+                    else:
+                        st.write("Shift keys:", ' '.join(map(str, shift_keys)))
+                        col1, col2 = st.columns(2)
+
+                        with col1:
+                            encrypted_text = encrypt_decrypt(file_content, shift_keys, ifdecrypt=False)
+                            st.write("Cipher:", encrypted_text)
+                        with col2:
+                            decrypted_text = encrypt_decrypt(encrypted_text, shift_keys, ifdecrypt=True)
+                            st.write("Decrypted text:", decrypted_text)
+
+                except:
+                    st.error("Shift keys should be integers!")
+
 
 def Primitive_Root():      
     st.header('Primitive Root', divider='rainbow') 
