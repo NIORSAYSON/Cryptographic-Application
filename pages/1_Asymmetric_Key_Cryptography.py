@@ -153,7 +153,7 @@ def DFA_Cipher():
     # Column 1
     col1, col2 = st.columns(2)
     with col1:
-        st.title("Key Generation")
+        st.subheader("Key Generation")
         prime = st.number_input("Enter a prime number:", min_value=3, step=1)
         if not isprime(prime):
             st.warning("Please enter a prime number.")
