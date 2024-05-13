@@ -1,7 +1,6 @@
 import streamlit as st
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, PKCS1_v1_5
-from Crypto import Random
 import base64
 
 class SessionState:
@@ -60,23 +59,27 @@ def main():
     st.title("RSA Encryption/Decryption App")
     mode = st.sidebar.selectbox("Select Mode:", ["Encrypt", "Decrypt"])
 
+    if not hasattr(st.session_state, "keys_generated"):
+        st.session_state.keys_generated = False
+        st.session_state.private_key = None
+        st.session_state.public_key = None
+
     if mode == "Encrypt":
         key_sizes = [1024, 2048, 3072, 4096]
         key_size = st.selectbox("Select RSA Key Size", key_sizes)
-
-        if not hasattr(st.session_state, "keys_generated"):
-            st.session_state.keys_generated = False
 
         if st.button("Generate RSA Key Pair") or not st.session_state.keys_generated:
             private_key, public_key = generate_key_pair(key_size)
             if private_key is not None and public_key is not None:
                 st.session_state.private_key = private_key
                 st.session_state.public_key = public_key
-                st.text("Public Key (X.509 Format):")
-                st.text(public_key.decode())  # decode bytes to string
-                st.text("Private Key (PKCS8 Format):")
-                st.text(private_key.decode())  # decode bytes to string
                 st.session_state.keys_generated = True
+
+        if st.session_state.public_key and st.session_state.private_key is not None:
+            st.text("Public Key (X.509 Format):")
+            st.text(st.session_state.public_key.decode())  # decode bytes to string
+            st.text("Private Key (PKCS8 Format):")
+            st.text(st.session_state.private_key.decode())  # decode bytes to string
 
         rsa_mode = st.radio("RSA Key Type:", ["Public Key", "Private Key"])
 
@@ -97,7 +100,7 @@ def main():
             st.warning("You're in Encrypt mode. Please select Public Key for encryption.")
 
     else:
-        if hasattr(st.session_state, "private_key"):
+        if st.session_state.private_key is not None:
             cipher_types = ["RSA", "RSA, ECB, PKCS1Padding", "RSA, ECB, OAEPWithSHA, 1AndMGF1Padding"]
             cipher_type = st.selectbox("Select Cipher Type:", cipher_types)
             message_decrypt = st.text_input("Enter Encrypted Text to Decrypt (Base64)")
@@ -111,4 +114,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
