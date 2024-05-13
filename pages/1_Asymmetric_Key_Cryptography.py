@@ -150,60 +150,59 @@ def DFA_Cipher():
         decrypted_message = ''.join(chr(ord(c) - shared_secret) for c in encrypted_message)
         return decrypted_message
 
-    def main():
-        st.title("Diffie-Hellman Key Exchange")
+    st.title("Diffie-Hellman Key Exchange")
 
-        # Column 1
-        col1, col2 = st.columns(2)
-        with col1:
-            st.title("Key Generation")
-            prime = st.number_input("Enter a prime number:", min_value=3, step=1)
-            if not isprime(prime):
-                st.warning("Please enter a prime number.")
-                return
+    # Column 1
+    col1, col2 = st.columns(2)
+    with col1:
+        st.title("Key Generation")
+        prime = st.number_input("Enter a prime number:", min_value=3, step=1)
+        if not isprime(prime):
+            st.warning("Please enter a prime number.")
+            return
 
-            max_generator = prime - 1 if prime > 2 else 1
-            generator = st.number_input("Enter generator:", min_value=2, max_value=max_generator, step=1)
-            if generator not in primerange(2, prime):
-                st.warning("Please enter a primitive root of the inputted prime number.")
-                return
+        max_generator = prime - 1 if prime > 2 else 1
+        generator = st.number_input("Enter generator:", min_value=2, max_value=max_generator, step=1)
+        if generator not in primerange(2, prime):
+            st.warning("Please enter a primitive root of the inputted prime number.")
+            return
 
-            private_key = st.number_input("Enter private key:", min_value=5, step=1)
+        private_key = st.number_input("Enter private key:", min_value=5, step=1)
 
-            public_key = calculate_public_key(prime, generator, private_key)
-            st.write("Public Key:", public_key)
-            st.write("Private Key:", private_key)
+        public_key = calculate_public_key(prime, generator, private_key)
+        st.write("Public Key:", public_key)
+        st.write("Private Key:", private_key)
 
-        # Column 2
-        with col2:
+    # Column 2
+    with col2:
+        choice = st.selectbox("Select:", ["Encrypt", "Decrypt"])
+        if choice == "Encrypt":
             message = st.text_area("Type a message:")
+            received_public_key_input = st.text_input("Enter Received public key:")
+            if received_public_key_input.strip() == " ":
+                st.warning("Please enter a valid public key.")
             send_button = st.button("Send")
 
             if send_button:
                 # Encrypt the message
-                received_public_key_input = st.text_input("Enter Received public key:")
-                if received_public_key_input.strip() == "":
-                    st.warning("Please enter a valid public key.")
-                    return
+                
                 shared_secret = calculate_shared_secret(private_key, int(received_public_key_input), prime)
                 encrypted_message = encrypt_message(message, shared_secret)
                 st.write("Encrypted Message:", encrypted_message)
-
-            received_message = st.text_input("Enter Received message (encrypted message):")
+        elif choice == "Decrypt":
+            received_message = st.text_area("Enter Received message (encrypted message):")
+            sender_private_key_input = st.text_input("Enter Sender's private key:")
+            if sender_private_key_input.strip() == " ":
+                st.warning("Please enter a valid private key.")
             receive_button = st.button("Receive")
 
             if receive_button:
                 # Decrypt the received message
-                sender_private_key_input = st.text_input("Enter Sender's private key:")
-                if sender_private_key_input.strip() == "":
-                    st.warning("Please enter a valid private key.")
-                    return
+                
                 shared_secret = calculate_shared_secret(private_key, int(sender_private_key_input), prime)
                 decrypted_message = decrypt_message(received_message, shared_secret)
                 st.write("Decrypted Message:", decrypted_message)
 
-    if __name__ == "__main__":
-        main()
 
 
 
