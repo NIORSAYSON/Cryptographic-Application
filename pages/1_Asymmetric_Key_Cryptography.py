@@ -150,8 +150,6 @@ def DFA_Cipher():
         decrypted_message = ''.join(chr(ord(c) - shared_secret) for c in encrypted_message)
         return decrypted_message
 
-    st.title("Diffie-Hellman Key Exchange")
-
     # Column 1
     col1, col2 = st.columns(2)
     with col1:
@@ -159,13 +157,11 @@ def DFA_Cipher():
         prime = st.number_input("Enter a prime number:", min_value=3, step=1)
         if not isprime(prime):
             st.warning("Please enter a prime number.")
-            return
 
         max_generator = prime - 1 if prime > 2 else 1
         generator = st.number_input("Enter generator:", min_value=2, max_value=max_generator, step=1)
         if generator not in primerange(2, prime):
             st.warning("Please enter a primitive root of the inputted prime number.")
-            return
 
         private_key = st.number_input("Enter private key:", min_value=5, step=1)
 
@@ -185,10 +181,18 @@ def DFA_Cipher():
 
             if send_button:
                 # Encrypt the message
-                
-                shared_secret = calculate_shared_secret(private_key, int(received_public_key_input), prime)
-                encrypted_message = encrypt_message(message, shared_secret)
-                st.write("Encrypted Message:", encrypted_message)
+                try:
+                    if int(received_public_key_input) != public_key:
+                        st.warning("Received public key should the same as the current public key.")
+                    elif message == "":
+                        st.warning("Please enter a message.")
+                    else:
+                        shared_secret = calculate_shared_secret(private_key, int(received_public_key_input), prime)
+                        encrypted_message = encrypt_message(message, shared_secret)
+                        st.write("Encrypted Message:", encrypted_message)
+                except ValueError:
+                    st.error("Invalid input. Please check the received public key.")
+
         elif choice == "Decrypt":
             received_message = st.text_area("Enter Received message (encrypted message):")
             sender_private_key_input = st.text_input("Enter Sender's private key:")
@@ -198,15 +202,20 @@ def DFA_Cipher():
 
             if receive_button:
                 # Decrypt the received message
-                
-                shared_secret = calculate_shared_secret(private_key, int(sender_private_key_input), prime)
-                decrypted_message = decrypt_message(received_message, shared_secret)
-                st.write("Decrypted Message:", decrypted_message)
+                try:
+                    if int(sender_private_key_input) != private_key:
+                        st.warning("Sender's private key should the same as the current private key.")
+                    elif received_message == "":
+                        st.warning("Please enter the encrypted message.")
+                    else:
+                        shared_secret = calculate_shared_secret(private_key, int(sender_private_key_input), prime)
+                        decrypted_message = decrypt_message(received_message, shared_secret)
+                        st.write("Decrypted Message:", decrypted_message)
+                except ValueError:
+                    st.error("Invalid input. Please check the sender's private key.")
 
 
-
-
-    
+        
 
 
 
