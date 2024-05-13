@@ -128,7 +128,7 @@ def RSA_Cipher():
         main()
 
 def DFA_Cipher():
-    st.header('Diffie-Hellman Encryption/Decryption App', divider='rainbow')
+    st.header('Diffie-Hellman Encryption/Decryption', divider='rainbow')
 
     from sympy import isprime, primerange
 

@@ -8,73 +8,91 @@ st.set_page_config(
     page_icon="🔑",
 )
 
-# def home():
-#     st.markdown("<h1 style='text-align: center;'>Applied Cryptography</h1>", unsafe_allow_html=True)
-#     st.markdown("<h2 style='text-align: center;'>Compilation of Learning Tasks</h2>", unsafe_allow_html=True)
-#     st.markdown("<hr>", unsafe_allow_html=True)
-#     st.markdown("<p style='text-align: center;'>Here's where all my applied cryptography learning tasks come together. From mastering XOR Cipher and Caesar Cipher to exploring Primitive Root and Block Cipher, this compilation reflects my journey through these cryptographic techniques. Each task has been a stepping stone, enhancing my understanding and skill in securing information and communication.</p>", unsafe_allow_html=True)
-#     st.markdown("<hr>", unsafe_allow_html=True)
-
-#     st.text("Name:          Sayson, Nestor Jr. B.")
-#     st.text("Section:       BSCS 3B")
-#     st.text("Instructor:    Mr. Allan Ibo Jr.")
-#     st.divider()
-
-
-
 def XOR_Cipher():
-      st.header('XOR Cipher', divider='rainbow')
+    st.header('XOR Encryption and Decryption', divider='rainbow')
 
-      def xor_encrypt(plaintext, key):
-          """Encrypts plaintext using XOR cipher with the given key, printing bits involved."""
+    def xor_encrypt(plaintext, key):
+        """Encrypts plaintext using XOR cipher with the given key."""
+        ciphertext = bytearray()
+        for i in range(len(plaintext)):
+            plaintext_byte = plaintext[i]
+            key_byte = key[i % len(key)]
+            cipher_byte = plaintext_byte ^ key_byte
+            ciphertext.append(cipher_byte)
+        return ciphertext
 
-          ciphertext = bytearray()
-          for i in range(len(plaintext)):
-              plaintext_byte = plaintext[i]
-              key_byte = key[i % len(key)]
-              cipher_byte = plaintext_byte ^ key_byte
-              ciphertext.append(cipher_byte)            
-              st.write(f"Plaintext byte: {bin(plaintext_byte)[2:]:>08} = {chr(plaintext_byte)}")
-              st.write(f"Key byte:       {bin(key_byte)[2:]:>08} = {chr(key_byte)}")
-              st.write(f"XOR result:     {bin(cipher_byte)[2:]:>08} = {chr(cipher_byte)}")
-              st.write("--------------------")
-              
-              
-          return ciphertext
+    def xor_decrypt(ciphertext, key):
+        """Decrypts ciphertext using XOR cipher with the given key."""
+        return xor_encrypt(ciphertext, key)  # XOR decryption is the same as encryption
+    
+    # Streamlit UI for Encryption
+    def encryption_section(plaintext_input):
+        st.subheader("XOR Encryption")
 
-      def xor_decrypt(ciphertext, key):
-          
-          """Decrypts ciphertext using XOR cipher with the given key."""
-          return xor_encrypt(ciphertext, key)   # XOR decryption is the same as encryption
+        key = st.text_input("Encryption Key", key="encrypt_key")
 
-      # Example usage:
-      plaintext = bytes(st.text_input('Plaintext').encode())
-      key = bytes(st.text_input('Key').encode())
-      if st.button("Submit", key="clk_btn"):
-          col1, col2 = st.columns(2)
-          if not plaintext.strip() and not key.strip():
-              st.error("Please input a plaintext and key.")
-          elif not plaintext.strip():
-              st.error("Please input a plaintext.")
-          elif not key.strip():
-              st.error("Please input a key.")
-          elif len(plaintext) >= len(key):
-              if plaintext != key:
-                  try:
-          
-                      with col1:
-                          cipher = xor_encrypt(plaintext, key)
-                          st.write(f"Ciphertext:", "".join([f"{chr(byte_val)}" for byte_val in cipher]))
-                      with col2:
-                          decrypt = xor_decrypt(cipher, key)
-                          st.write(f"Decrypted:", "".join([f"{chr(byte_va)}" for byte_va in decrypt]))
-                  except:
-                          st.error("Invalid Key!")
-              else:
-                  st.error("Plaintext should not be equal to the key")
-          else:
-              st.error("Plaintext length should be equal or greater than the length of key")  
-      
+        if st.button("Encrypt", key="encrypt_btn"):
+            if plaintext_input and key.strip():
+                if len(plaintext_input) >= len(key):
+                    try:
+                        ciphertext = xor_encrypt(plaintext_input.encode(), key.encode())
+                        st.write("Ciphertext:", ciphertext.decode())
+                    except:
+                        st.error("Invalid Key!")
+                else:
+                    st.error("Plaintext length should be equal or greater than the length of key")
+            else:
+                if not plaintext_input and not key.strip():
+                    st.error("Please input a plaintext and key.")
+                elif not plaintext_input:
+                    st.error("Please input a plaintext or upload a file.")
+                elif not key.strip():
+                    st.error("Please input a key.")
+
+    # Streamlit UI for Decryption
+    def decryption_section(ciphertext_input):
+        st.subheader("XOR Decryption")
+
+        key = st.text_input("Decryption Key", key="decrypt_key")
+
+        if st.button("Decrypt", key="decrypt_btn"):
+            if ciphertext_input and key.strip():
+                if len(ciphertext_input) >= len(key):
+                    try:
+                        plaintext = xor_decrypt(ciphertext_input.encode(), key.encode()).decode()
+                        st.write("Decrypted Plaintext:", plaintext)
+                    except:
+                        st.error("Invalid Key!")
+                else:
+                    st.error("Ciphertext length should be equal or greater than the length of key")
+            else:
+                if not ciphertext_input and not key.strip():
+                    st.error("Please input a ciphertext and key.")
+                elif not ciphertext_input:
+                    st.error("Please input a ciphertext.")
+                elif not key.strip():
+                    st.error("Please input a key.")
+
+    option = st.radio("Select Input Type", ("Text", "File"))
+
+    if option == "Text":
+        plaintext_input = st.text_input("Plaintext")
+        encryption_section(plaintext_input)
+        st.write("---")
+        ciphertext_input = st.text_input("Ciphertext")
+        decryption_section(ciphertext_input)
+    else:
+       # File upload
+        uploaded_file = st.file_uploader("Upload plaintext file", type=["txt"])
+        if uploaded_file:
+            file_content = uploaded_file.read().decode()
+            # Encryption section
+            encryption_section(file_content)
+            st.write("---")
+            st.subheader("XOR Decryption")
+            key = st.text_input("Decryption Key", key="decrypt_key")
+            if st.button("Decrypt", key="decrypt_btn"):
+                st.write("Decrypted Plaintext:", file_content)
 
 def Caesar_Cipher():
     st.header('Caesar Cipher', divider='rainbow')
