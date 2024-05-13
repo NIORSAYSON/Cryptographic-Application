@@ -6,3 +6,4 @@ streamlit
 rsa
 pycryptodome
 tinyec
+sympy
