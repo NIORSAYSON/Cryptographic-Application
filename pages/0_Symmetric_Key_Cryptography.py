@@ -84,7 +84,7 @@ def XOR_Cipher():
         decryption_section(ciphertext_input)
     else:
        # File upload
-        uploaded_file = st.file_uploader("Upload plaintext file", type=["txt"])
+        uploaded_file = st.file_uploader("Upload plaintext file:", type=["txt"])
         if uploaded_file:
             st.subheader("XOR Encryption")
             file_content = uploaded_file.read().decode()
@@ -156,7 +156,7 @@ def Caesar_Cipher():
 
     else:
         # File upload
-        uploaded_file = st.file_uploader("Upload plaintext file", type=["txt"])
+        uploaded_file = st.file_uploader("Please upload plaintext file", type=["txt"])
         if uploaded_file:
             file_content = uploaded_file.read().decode()
             shift_keys_input = st.text_input("Shift Keys")
