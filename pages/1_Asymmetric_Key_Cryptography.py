@@ -54,8 +54,6 @@ def RSA_Cipher():
                 cipher = PKCS1_v1_5.new(key)
             elif cipher_type == "RSA, ECB, OAEPWithSHA, 1AndMGF1Padding":
                 cipher = PKCS1_OAEP.new(key)
-            elif cipher_type == "RSA, ECB, OAEPWithSHA, 256AndMGF1Padding":
-                cipher = PKCS1_OAEP.new(key, hashAlgo=SHA256, mgf=MGF1)
             else:
                 cipher = PKCS1_v1_5.new(key)
 
@@ -88,10 +86,13 @@ def RSA_Cipher():
                     st.session_state.keys_generated = True
 
             if st.session_state.public_key and st.session_state.private_key is not None:
-                st.text("Public Key (X.509 Format):")
-                st.text(st.session_state.public_key.decode())  # decode bytes to string
-                st.text("Private Key (PKCS8 Format):")
-                st.text(st.session_state.private_key.decode())  # decode bytes to string
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.text("Public Key (X.509 Format):")
+                    st.text(st.session_state.public_key.decode())  # decode bytes to string
+                with col2:
+                    st.text("Private Key (PKCS8 Format):")
+                    st.text(st.session_state.private_key.decode())  # decode bytes to string
 
             rsa_mode = st.radio("RSA Key Type:", ["Public Key", "Private Key"])
 
@@ -107,7 +108,10 @@ def RSA_Cipher():
                         encrypted_message = rsa_encrypt(message_encrypt.encode(), st.session_state.public_key, cipher_type)
                         if encrypted_message is not None:
                             st.text("Encrypted Output (Base64):")
-                            st.text(encrypted_message.decode())  # decode bytes to string
+                            encrypted_message_str = encrypted_message.decode()  # decode bytes to string
+                            st.text_area("Encrypted Message:", value=encrypted_message_str)
+                            
+
             else:
                 st.warning("You're in Encrypt mode. Please select Public Key for encryption.")
 
@@ -115,7 +119,7 @@ def RSA_Cipher():
             if st.session_state.private_key is not None:
                 cipher_types = ["RSA", "RSA, ECB, PKCS1Padding", "RSA, ECB, OAEPWithSHA, 1AndMGF1Padding"]
                 cipher_type = st.selectbox("Select Cipher Type:", cipher_types)
-                message_decrypt = st.text_input("Enter Encrypted Text to Decrypt (Base64)")
+                message_decrypt = st.text_area("Enter Encrypted Text to Decrypt (Base64)")
                 if st.button("Decrypt"):
                     decrypted_message = rsa_decrypt(message_decrypt.encode(), st.session_state.private_key, cipher_type)
                     if decrypted_message is not None:
@@ -189,7 +193,8 @@ def DFA_Cipher():
                     else:
                         shared_secret = calculate_shared_secret(private_key, int(received_public_key_input), prime)
                         encrypted_message = encrypt_message(message, shared_secret)
-                        st.write("Encrypted Message:", encrypted_message)
+                        st.write("Encrypted Message:")
+                        st.code(encrypted_message)
                 except ValueError:
                     st.error("Invalid input. Please check the received public key.")
 
@@ -210,7 +215,8 @@ def DFA_Cipher():
                     else:
                         shared_secret = calculate_shared_secret(private_key, int(sender_private_key_input), prime)
                         decrypted_message = decrypt_message(received_message, shared_secret)
-                        st.write("Decrypted Message:", decrypted_message)
+                        st.write("Decrypted Message:")
+                        st.write(decrypted_message)
                 except ValueError:
                     st.error("Invalid input. Please check the sender's private key.")
 
