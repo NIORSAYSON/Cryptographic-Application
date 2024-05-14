@@ -27,7 +27,6 @@ def XOR_Cipher():
     
     # Streamlit UI for Encryption
     def encryption_section(plaintext_input):
-        st.subheader("XOR Encryption")
 
         key = st.text_input("Encryption Key", key="encrypt_key")
 
@@ -36,7 +35,8 @@ def XOR_Cipher():
                 if len(plaintext_input) >= len(key):
                     try:
                         ciphertext = xor_encrypt(plaintext_input.encode(), key.encode())
-                        st.write("Ciphertext:", ciphertext.decode())
+                        st.write("Ciphertext:")
+                        st.code(ciphertext.decode())
                     except:
                         st.error("Invalid Key!")
                 else:
@@ -51,7 +51,6 @@ def XOR_Cipher():
 
     # Streamlit UI for Decryption
     def decryption_section(ciphertext_input):
-        st.subheader("XOR Decryption")
 
         key = st.text_input("Decryption Key", key="decrypt_key")
 
@@ -76,15 +75,18 @@ def XOR_Cipher():
     option = st.radio("Select Input Type", ("Text", "File"))
 
     if option == "Text":
+        st.subheader("XOR Encryption")
         plaintext_input = st.text_input("Plaintext")
         encryption_section(plaintext_input)
         st.write("---")
+        st.subheader("XOR Decryption")
         ciphertext_input = st.text_input("Ciphertext")
         decryption_section(ciphertext_input)
     else:
        # File upload
         uploaded_file = st.file_uploader("Upload plaintext file", type=["txt"])
         if uploaded_file:
+            st.subheader("XOR Encryption")
             file_content = uploaded_file.read().decode()
             # Encryption section
             encryption_section(file_content)
